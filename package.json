@@ -1,6 +1,6 @@
 {
-  "name": "distribution-gmb",
-  "version": "0.0.0",
+  "name": "kedar",
+  "version": "1.0.0",
   "private": true,
   "scripts": {
     "dev": "nodemon ./bin/www",

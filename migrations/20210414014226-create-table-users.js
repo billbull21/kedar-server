@@ -9,13 +9,21 @@ module.exports = {
         primaryKey: true,
         allowNull: false
       },
-      username: {
+      nama_lengkap: {
+        type: Sequelize.STRING,
+        allowNull: false
+      },
+      user_attr: {
+        type: Sequelize.STRING,
+        allowNull: true
+      },
+      email: {
         type: Sequelize.STRING,
         allowNull: false
       },
       role: {
         type: Sequelize.ENUM,
-        values: ['admin', 'client'],
+        values: ['admin', 'pengajar', 'pelajar'],
         allowNull: false
       },
       password: {
@@ -34,8 +42,8 @@ module.exports = {
 
     await queryInterface.addConstraint('users', {
       type: 'unique',
-      fields: ['username'],
-      name: 'UNIQUE_USERS_USERNAME'
+      fields: ['email'],
+      name: 'UNIQUE_USERS_EMAIL'
     })
 
   },

@@ -1,116 +1,130 @@
 const bcrypt = require('bcrypt');
 const Validator = require('fastest-validator');
-const {User} = require('../../models/');
+const {
+    User
+} = require('../../models/');
 const v = new Validator();
 
-const register = async function(req, res) {
-    
+const register = async function (req, res) {
+
     try {
-     const schema = {
-         username: 'string|empty:false',
-         // email: 'email|empty:false',
-         password: 'string|min:6',
-     }
- 
-     const validate = v.validate(req.body, schema);
- 
-     console.log("VALIDATE : ", validate);
-     if (validate.length) {
-         return res.status(400).json({
-             status: 'error',
-             message: validate,
-         })
-     } else {
+        const schema = {
+            nama_lengkap: 'string|empty:false',
+            email: 'email|empty:false',
+            role: 'string|empty:false',
+            password: 'string|min:6',
+        }
 
-         const user = await User.findOne({
-             where: {username: req.body.username}
-         })
+        const validate = v.validate(req.body, schema);
 
-         if (user) {
-             return res.status(409).json({
-                 status: 'error',
-                 message: 'username already exists!',
-             })
-         }
+        console.log("VALIDATE : ", validate);
+        if (validate.length) {
+            return res.status(400).json({
+                status: 'error',
+                message: validate,
+            })
+        } else {
 
-         // use var, because const/let can't redeclared!
-         var password = await bcrypt.hash(req.body.password, 10)
+            const user = await User.findOne({
+                where: {
+                    email: req.body.email
+                }
+            })
 
-         var data = {
-             username: req.body.username,
-             password,
-             role: 'client',
-         }
+            if (user) {
+                return res.status(409).json({
+                    status: 'error',
+                    message: 'email already exists!',
+                })
+            }
 
-         const createUser = await User.create(data)
+            // use var, because const/let can't redeclared!
+            var password = await bcrypt.hash(req.body.password, 10)
 
-         var {password, ...result} = createUser['dataValues']
+            var data = {
+                nama_lengkap: req.body.nama_lengkap,
+                user_attr: req.body.user_attr,
+                email: req.body.email,
+                password,
+                role: req.body.role,
+            }
 
-         return res.status(200).json({
-             status: 'success',
-             message: result,
-         })
-     }
+            const createUser = await User.create(data)
+
+            var {
+                password,
+                ...result
+            } = createUser['dataValues']
+
+            return res.status(200).json({
+                status: 'success',
+                message: result,
+            })
+        }
     } catch (e) {
-     console.log("ERROR MSG : ", e);
-     return res.status(500).json({
-         status: 'error',
-         message: 'internal server error!',
-     })
+        console.log("ERROR MSG : ", e);
+        return res.status(500).json({
+            status: 'error',
+            message: 'internal server error!',
+        })
     }
 }
 
-const login = async function(req, res) {
-    
+const login = async function (req, res) {
+
     try {
-     const schema = {
-         username: 'string|empty:false',
-         // email: 'email|empty:false',
-         password: 'string|min:6',
-     }
- 
-     const validate = v.validate(req.body, schema);
- 
-     console.log("VALIDATE : ", validate);
-     if (validate.length) {
-         return res.status(400).json({
-             status: 'error',
-             message: validate,
-         })
-     } else {
+        const schema = {
+            email: 'email|empty:false',
+            password: 'string|min:6',
+        }
 
-         const user = await User.findOne({
-             where: {username: req.body.username}
-         })
+        const validate = v.validate(req.body, schema);
 
-         if (!user) {
-             return res.status(404).json({
-                 status: 'error',
-                 message: 'username not found!',
-             })
-         }
-
-         const isValidPassword = await bcrypt.compare(req.body.password, user.password)
-         if (!isValidPassword) {
-            return res.status(401).json({
+        console.log("VALIDATE : ", validate);
+        if (validate.length) {
+            return res.status(400).json({
                 status: 'error',
-                message: 'username and password doesn\'t match!',
+                message: validate,
             })
-         }
+        } else {
 
-         const {password, ...result} = user['dataValues']
+            const user = await User.findOne({
+                where: {
+                    email: req.body.email
+                }
+            })
 
-         return res.status(200).json({
-             status: 'success',
-             message: result,
-         })
-     }
+            if (!user) {
+                return res.status(404).json({
+                    status: 'error',
+                    message: 'email not found!',
+                })
+            }
+
+            const isValidPassword = await bcrypt.compare(req.body.password, user.password)
+            if (!isValidPassword) {
+                return res.status(401).json({
+                    status: 'error',
+                    message: 'email and password doesn\'t match!',
+                })
+            }
+
+            const {
+                password,
+                ...result
+            } = user['dataValues']
+
+            return res.status(200).json({
+                status: 'success',
+                message: result,
+            })
+        }
     } catch (e) {
-     console.log("ERROR MSG : ", e);
-     return res.status(500).json({
-         status: 'error',
-         message: 'internal server error!',
-     })
+        console.log("ERROR MSG : ", e);
+        return res.status(500).json({
+            status: 'error',
+            message: 'internal server error!',
+        })
     }
 }
 

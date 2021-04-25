@@ -5,7 +5,7 @@
  */
 
 var app = require('../app');
-var debug = require('debug')('distribution-gmb:server');
+var debug = require('debug')('kedar:server');
 var http = require('http');
 
 /**

@@ -6,13 +6,21 @@ module.exports = (sequelize, DataTypes) => {
       primaryKey: true,
       allowNull: false
     },
-    username: {
+    nama_lengkap: {
+      type: DataTypes.STRING,
+      allowNull: false
+    },
+    user_attr: {
+      type: DataTypes.STRING,
+      allowNull: true
+    },
+    email: {
       type: DataTypes.STRING,
       allowNull: false
     },
     role: {
       type: DataTypes.ENUM,
-      values: ['admin', 'client'],
+      values: ['admin', 'pengajar', 'pelajar'],
       allowNull: false,
       defaultValue: 'client'
     },
