@@ -11,7 +11,7 @@ const register = async function (req, res) {
         const schema = {
             nama_lengkap: 'string|empty:false',
             email: 'email|empty:false',
-            role: 'string|empty:false',
+            role: { type: "string", items: "string", enum: [ "pengajar", "pelajar" ] },
             password: 'string|min:6',
         }
 
