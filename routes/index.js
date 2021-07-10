@@ -11,5 +11,6 @@ router.get('/', function(req, res, next) {
 });
 
 router.get('/class', verifyToken, classController.fetchAll);
+router.post('/class', verifyToken, classController.create);
 
 module.exports = router;
