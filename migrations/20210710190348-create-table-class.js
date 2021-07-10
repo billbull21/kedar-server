@@ -2,16 +2,28 @@
 
 module.exports = {
   up: async (queryInterface, Sequelize) => {
-    await queryInterface.createTable('refresh_tokens', {
+    await queryInterface.createTable('m_class', {
       id: {
         type: Sequelize.INTEGER,
         autoIncrement: true,
         primaryKey: true,
         allowNull: false
       },
-      token: {
-        type: Sequelize.TEXT,
+      name: {
+        type: Sequelize.STRING,
         allowNull: false
+      },
+      description: {
+        type: Sequelize.STRING,
+        allowNull: true
+      },
+      avatar: {
+        type: Sequelize.STRING,
+        allowNull: true
+      },
+      banner: {
+        type: Sequelize.STRING,
+        allowNull: true
       },
       user_id: {
         type: Sequelize.INTEGER,
@@ -27,18 +39,19 @@ module.exports = {
       }
     });
 
-    await queryInterface.addConstraint('refresh_tokens', {
+    await queryInterface.addConstraint('m_class', {
       type: 'foreign key',
       fields: ['user_id'],
-      name: 'REFRESH_TOKEN_USER_ID',
+      name: 'M_CLASS_USER_ID',
       references: {
-        table: 'users',
+        table: 'm_users',
         field: 'id'
       }
     })
+    
   },
 
   down: async (queryInterface, Sequelize) => {
-    await queryInterface.dropTable('refresh_tokens');
+    await queryInterface.dropTable('m_class');
   }
 };

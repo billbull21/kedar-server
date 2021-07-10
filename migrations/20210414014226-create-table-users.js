@@ -2,18 +2,22 @@
 
 module.exports = {
   up: async (queryInterface, Sequelize) => {
-    await queryInterface.createTable('users', {
+    await queryInterface.createTable('m_users', {
       id: {
         type: Sequelize.INTEGER,
         autoIncrement: true,
         primaryKey: true,
         allowNull: false
       },
-      nama_lengkap: {
+      name: {
         type: Sequelize.STRING,
         allowNull: false
       },
-      user_attr: {
+      username: {
+        type: Sequelize.STRING,
+        allowNull: false,
+      },
+      avatar: {
         type: Sequelize.STRING,
         allowNull: true
       },
@@ -21,9 +25,13 @@ module.exports = {
         type: Sequelize.STRING,
         allowNull: false
       },
-      role: {
+      status: {
         type: Sequelize.ENUM,
-        values: ['admin', 'pengajar', 'pelajar'],
+        values: ['inactive', 'active'],
+        allowNull: false
+      },
+      confirmation_code: {
+        type: Sequelize.STRING,
         allowNull: false
       },
       password: {
@@ -40,7 +48,19 @@ module.exports = {
       }
     });
 
-    await queryInterface.addConstraint('users', {
+    await queryInterface.addConstraint('m_users', {
+      type: 'unique',
+      fields: ['confirmation_code'],
+      name: 'UNIQUE_USERS_CONFIRMATIONCODE'
+    })
+
+    await queryInterface.addConstraint('m_users', {
+      type: 'unique',
+      fields: ['username'],
+      name: 'UNIQUE_USERS_USERNAME'
+    })
+
+    await queryInterface.addConstraint('m_users', {
       type: 'unique',
       fields: ['email'],
       name: 'UNIQUE_USERS_EMAIL'
@@ -49,6 +69,6 @@ module.exports = {
   },
 
   down: async (queryInterface, Sequelize) => {
-    await queryInterface.dropTable('users');
+    await queryInterface.dropTable('m_users');
   }
 };

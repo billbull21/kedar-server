@@ -6,11 +6,15 @@ module.exports = (sequelize, DataTypes) => {
       primaryKey: true,
       allowNull: false
     },
-    nama_lengkap: {
+    nama: {
       type: DataTypes.STRING,
       allowNull: false
     },
-    user_attr: {
+    username: {
+      type: DataTypes.STRING,
+      allowNull: true
+    },  
+    avatar: {
       type: DataTypes.STRING,
       allowNull: true
     },
@@ -18,11 +22,16 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.STRING,
       allowNull: false
     },
-    role: {
+    status: {
       type: DataTypes.ENUM,
-      values: ['admin', 'pengajar', 'pelajar'],
+      values: ['inactive', 'active'],
       allowNull: false,
       defaultValue: 'client'
+    },
+    confirmationCode: {
+      field: 'confirmation_code',
+      type: DataTypes.STRING,
+      allowNull: false
     },
     password: {
       type: DataTypes.STRING,
@@ -39,7 +48,7 @@ module.exports = (sequelize, DataTypes) => {
       allowNull: false
     }
   }, {
-    tableName: 'users',
+    tableName: 'm_users',
     timestamp: true
   });
 
