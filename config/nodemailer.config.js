@@ -8,6 +8,11 @@ const {
 
 const transport = nodemailer.createTransport({
   service: "Gmail",
+  secure: false, // use SSL
+  port: 25, // port for secure SMTP
+  tls: {
+    rejectUnauthorized: false
+  },
   auth: {
     user: EMAIL_SENDER,
     pass: PASS_SENDER
@@ -21,7 +26,7 @@ module.exports.sendConfirmationEmail = (name, email, confirmationCode) => {
     from: EMAIL_SENDER,
     to: email,
     subject: "Please confirm your account",
-    html: `<h1>Email Confirmation</h1>
+    html: `<h1>Email Confirmation For KEDAR</h1>
         <h2>Hello ${name}</h2>
         <p>Thank you for subscribing. Please confirm your email by clicking on the following link</p>
         <a href=http://${BASE_URL}/api/user/confirm/${confirmationCode}>Click here</a>

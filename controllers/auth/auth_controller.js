@@ -6,7 +6,7 @@ const {
 const { Op } = require("sequelize");
 const jwt = require('jsonwebtoken');
 const v = new Validator();
-const nodemailer = require("nodemailer");
+const nodemailer = require("../../config/nodemailer.config");
 
 const {
     JWT_SECRET,
@@ -16,7 +16,7 @@ const register = async function (req, res) {
 
     try {
         const schema = {
-            nama: 'string|empty:false',
+            name: 'string|empty:false',
             username: 'string|empty:false',
             email: 'email|empty:false',
             password: 'string|min:6',
@@ -58,12 +58,12 @@ const register = async function (req, res) {
             }, JWT_SECRET)
 
             var data = {
-                nama: req.body.nama,
+                name: req.body.name,
                 username: req.body.username,
                 email: req.body.email,
                 password,
                 status: 'inactive',
-                confirmation_code: token,
+                confirmationCode: token,
             }
 
             const user = await User.create(data)
@@ -71,7 +71,7 @@ const register = async function (req, res) {
             nodemailer.sendConfirmationEmail(
                 user.username,
                 user.email,
-                user.confirmation_code
+                user.confirmationCode
             );
 
             return res.status(200).json({
@@ -116,7 +116,7 @@ const login = async function (req, res) {
             if (!user) {
                 return res.status(400).json({
                     status: 'error',
-                    message: 'email not found!',
+                    message: 'user was not found!',
                 })
             }
 
@@ -167,9 +167,11 @@ const confirm = async function (req, res) {
         const { confirmationCode } = req.params;
         const decodeData = jwt.verify(confirmationCode, process.env.JWT_SECRET)
 
+        console.log("DECODE DATA", decodeData);
+
         const user = await User.findOne({
             where: {
-                email: decodeData.data.email,
+                email: decodeData.email,
                 confirmation_code: confirmationCode
             }
         })
