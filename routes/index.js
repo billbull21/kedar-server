@@ -12,5 +12,7 @@ router.get('/', function(req, res, next) {
 
 router.get('/class', verifyToken, classController.fetchAll);
 router.post('/class', verifyToken, classController.create);
+router.put('/class/:id', verifyToken, classController.update);
+router.delete('/class/:id', verifyToken, classController.del);
 
 module.exports = router;
