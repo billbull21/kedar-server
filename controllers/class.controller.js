@@ -1,10 +1,12 @@
 const Validator = require('fastest-validator');
 const {
-    MClass
+    MClass,
+    TClassUsers
 } = require('../models/');
 const {
     Op
 } = require("sequelize");
+const { v4: uuidv4 } = require('uuid');
 const v = new Validator();
 
 const fetchAll = async function (req, res) {
@@ -56,6 +58,11 @@ const create = async function (req, res) {
             }
 
             const createClass = await MClass.create(data);
+            const join = await TClassUsers.create({
+                id: uuidv4(),
+                class_id: createClass.id,
+                user_id: req.user.data.id
+            });
 
             return res.status(200).json({
                 status: 'success',
