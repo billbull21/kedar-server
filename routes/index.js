@@ -5,6 +5,7 @@ const verifyToken = require('../middlewares/verifyToken');
 
 const classController = require('../controllers/class.controller');
 const tClassUsersController = require('../controllers/t_class_users.controller');
+const tClassActivitysController = require('../controllers/t_class_activity.controller');
 
 /* GET home page. */
 router.get('/', function(req, res, next) {
@@ -19,5 +20,9 @@ router.delete('/master/class/:id', verifyToken, classController.del);
 router.get('/class', verifyToken, tClassUsersController.fetchAll);
 router.post('/class', verifyToken, tClassUsersController.create);
 router.delete('/class/:id', verifyToken, tClassUsersController.del);
+
+router.get('/class/activity/:id', verifyToken, tClassActivitysController.fetchAll);
+router.post('/class/activity', verifyToken, tClassActivitysController.create);
+router.delete('/class/activity/:id', verifyToken, tClassActivitysController.del);
 
 module.exports = router;

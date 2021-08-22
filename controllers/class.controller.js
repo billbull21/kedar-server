@@ -3,11 +3,9 @@ const {
     MClass,
     TClassUsers
 } = require('../models/');
-const {
-    Op
-} = require("sequelize");
 const { v4: uuidv4 } = require('uuid');
 const v = new Validator();
+const fs = require('fs');
 
 const fetchAll = async function (req, res) {
 
@@ -54,7 +52,6 @@ const create = async function (req, res) {
                 description: req.body.description,
                 user_id: req.user.data.id,
                 avatar: req.body.avatar,
-                banner: req.body.banner,
             }
 
             const createClass = await MClass.create(data);
@@ -103,21 +100,45 @@ const update = async function (req, res) {
 
             const classData = await MClass.findByPk(id);
 
-            const data = {
-                name: req.body.name || classData.name,
-                description: req.body.description || classData.description,
-                avatar: req.body.avatar || classData.avatar,
-                banner: req.body.banner || classData.banner,
+            if (classData) {
+                var filePath = "";
+
+                if (req.body.avatar) {
+                    const file = Buffer.from(req.body.avatar, 'base64');
+
+                    const folderPath = `/upload/class-avatar`
+                    filePath = `${folderPath}/${classData.id}.png`
+
+                    fs.mkdirSync('public'+folderPath, { recursive: true })
+                    fs.writeFileSync('public'+filePath, file,  
+                        function() 
+                        {
+                            console.log('DEBUG - feed:message: Saved to disk image attached by user:', 'public/temporary/file.csv');
+                        },
+                    );
+                }
+
+                const data = {
+                    name: req.body.name || classData.name,
+                    description: req.body.description || classData.description,
+                    avatar: filePath || classData.avatar,
+                }
+    
+                const updateClass = await classData.update(data);
+
+                updateClass.avatar = `${req.get('host')}`+updateClass.avatar
+    
+                return res.status(200).json({
+                    status: 'success',
+                    message: "successfully update a class!",
+                    data: updateClass,
+                })
+            } else {
+                return res.status(400).json({
+                    status: 'failed',
+                    message: "class was not found!",
+                })
             }
-
-            const updateClass = await classData.update(data);
-
-            return res.status(200).json({
-                status: 'success',
-                message: "successfully update a class!",
-                data: updateClass,
-            })
-
         }
     } catch (e) {
         console.log("ERROR MSG : ", e);

@@ -32,30 +32,56 @@ const register = async function (req, res) {
             })
         } else {
 
-            // const user = await User.findOne({
-            //     where: {
-            //         [Op.or]: [
-            //             { username: req.body.username },
-            //             { email: req.body.email },
-            //         ]
-            //     }
-            // })
-
-            // if (user) {
-            //     return res.status(409).json({
-            //         status: 'error',
-            //         message: 'email already exists!',
-            //     })
-            // }
-
-            // use var, because const/let can't redeclared!
-            var password = await bcrypt.hash(req.body.password, 10)
+            const user = await User.findOne({
+                where: {
+                    [Op.or]: [
+                        { username: req.body.username },
+                        { email: req.body.email },
+                    ]
+                }
+            })
 
             // JWT
             const token = jwt.sign({
                 username: req.body.username,
                 email: req.body.email,
             }, JWT_SECRET)
+
+            if (user) {
+                var message = "";
+                if (user.email == req.body.email) {
+                    if (user.status === 'inactive') {
+                        message = 'account with this email is doesn\'t activated. please check your mailbox!'
+                        nodemailer.sendConfirmationEmail(
+                            user.username,
+                            user.email,
+                            user.confirmationCode
+                        )
+                    } else {
+                        message = 'email already exists!'
+                    }
+                } else if (user.username == req.body.username) {
+                    message = 'username already exists!'
+                } else {
+                    if (user.status === 'inactive') {
+                        message = 'account with this email is doesn\'t activated. please check your mailbox!'
+                        nodemailer.sendConfirmationEmail(
+                            user.username,
+                            user.email,
+                            user.confirmationCode
+                        );
+                    } else {
+                        message = 'username and email already exists!'
+                    }
+                }
+                return res.status(409).json({
+                    status: 'error',
+                    message: message,
+                })
+            }
+
+            // use var, because const/let can't redeclared!
+            var password = await bcrypt.hash(req.body.password, 10)
 
             var data = {
                 name: req.body.name,
@@ -66,12 +92,12 @@ const register = async function (req, res) {
                 confirmationCode: token,
             }
 
-            const user = await User.create(data)
+            const userInsert = await User.create(data)
 
             nodemailer.sendConfirmationEmail(
-                user.username,
-                user.email,
-                user.confirmationCode
+                userInsert.username,
+                userInsert.email,
+                userInsert.confirmationCode
             );
 
             return res.status(200).json({
@@ -171,8 +197,7 @@ const confirm = async function (req, res) {
 
         const user = await User.findOne({
             where: {
-                email: decodeData.email,
-                confirmation_code: confirmationCode
+                email: decodeData.email
             }
         })
 
