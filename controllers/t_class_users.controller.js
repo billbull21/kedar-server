@@ -10,14 +10,15 @@ const fetchAll = async function (req, res) {
     try {
 
         const data = await sequelize.query(`
-            SELECT tcu.*, mc.name as class_name, mc.avatar as class_avatar, mc.user_id as class_owner, mu.name as user_name FROM t_class_users tcu
+            SELECT tcu.*, mc.name as class_name, mc.avatar as class_avatar, mc.user_id as class_owner, mu.name as class_owner_name FROM t_class_users tcu
             INNER JOIN m_class mc ON mc.id = tcu.class_id
             INNER JOIN m_users mu ON mu.id = tcu.user_id
             WHERE tcu.user_id = ${req.user.data.id}
         `, {type: QueryTypes.SELECT});
 
         const result = data.map((x) => {
-            x.class_avatar = `${req.get('host')}`+x.class_avatar
+            if (x.class_avatar)
+                x.class_avatar = `${req.get('host')}`+x.class_avatar
             return x
         });
 
