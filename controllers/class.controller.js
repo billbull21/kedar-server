@@ -126,7 +126,7 @@ const update = async function (req, res) {
     
                 const updateClass = await classData.update(data);
 
-                updateClass.avatar = `${req.get('host')}`+updateClass.avatar
+                updateClass.avatar = req.protocol+'://'+`${req.get('host')}`+updateClass.avatar
     
                 return res.status(200).json({
                     status: 'success',

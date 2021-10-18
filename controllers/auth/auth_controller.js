@@ -23,7 +23,7 @@ const fetchAllUsers = async function (req, res) {
 
         const result = data.map((x) => {
             if (x.avatar)
-                x.avatar = `${req.get('host')}`+x.avatar
+                x.avatar = req.protocol+'://'+`${req.get('host')}`+x.avatar
             return x
         });
 
@@ -54,7 +54,7 @@ const fetchUserByUsername = async function (req, res) {
         })
 
         if (data.avatar) {
-            data.avatar = `${req.get('host')}`+data.avatar;
+            data.avatar = req.protocol+'://'+`${req.get('host')}`+data.avatar;
         }
 
         return res.status(200).json({
