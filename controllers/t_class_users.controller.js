@@ -18,7 +18,7 @@ const fetchAll = async function (req, res) {
 
         const result = data.map((x) => {
             if (x.class_avatar)
-                x.class_avatar = req.protocol+'://'+req.hostname+x.class_avatar
+                x.class_avatar = req.protocol+'://'+`${req.get('host')}`+x.class_avatar
             return x
         });
 

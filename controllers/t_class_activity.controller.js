@@ -74,7 +74,7 @@ const create = async function (req, res) {
 
             const fetchResult = await TClassActivity.create(data);
 
-            fetchResult.attachment = req.protocol+'://'+req.hostname+fetchResult.attachment
+            fetchResult.attachment = req.protocol+'://'+`${req.get('host')}`+fetchResult.attachment
 
             return res.status(200).json({
                 status: 'success',

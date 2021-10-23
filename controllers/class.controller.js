@@ -78,7 +78,8 @@ const create = async function (req, res) {
                 user_id: req.user.data.id
             });
 
-            createClass.avatar = req.protocol+'://'+req.hostname+createClass.avatar
+            if (createClass.avatar)
+                createClass.avatar = req.protocol+'://'+`${req.get('host')}`+createClass.avatar
 
             return res.status(200).json({
                 status: 'success',
@@ -145,7 +146,7 @@ const update = async function (req, res) {
     
                 const updateClass = await classData.update(data);
 
-                updateClass.avatar = req.protocol+'://'+req.hostname+updateClass.avatar
+                updateClass.avatar = req.protocol+'://'+`${req.get('host')}`+updateClass.avatar
     
                 return res.status(200).json({
                     status: 'success',
