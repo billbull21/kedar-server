@@ -16,9 +16,15 @@ const fetchAll = async function (req, res) {
             }
         })
 
+        const result = data.map((x) => {
+            if (x.avatar)
+                x.avatar = req.protocol+'://'+`${req.get('host')}`+x.avatar
+            return x
+        });
+
         return res.status(200).json({
             status: 'success',
-            data: data,
+            data: result,
         })
     } catch (e) {
         console.log("ERROR MSG : ", e);
