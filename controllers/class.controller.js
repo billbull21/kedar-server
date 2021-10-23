@@ -78,6 +78,8 @@ const create = async function (req, res) {
                 user_id: req.user.data.id
             });
 
+            createClass.avatar = req.protocol+'://'+req.hostname+createClass.avatar
+
             return res.status(200).json({
                 status: 'success',
                 message: "successfully create new class!",
@@ -143,7 +145,7 @@ const update = async function (req, res) {
     
                 const updateClass = await classData.update(data);
 
-                updateClass.avatar = req.protocol+'://'+`${req.get('host')}`+updateClass.avatar
+                updateClass.avatar = req.protocol+'://'+req.hostname+updateClass.avatar
     
                 return res.status(200).json({
                     status: 'success',
