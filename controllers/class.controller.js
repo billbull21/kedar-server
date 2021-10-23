@@ -47,11 +47,28 @@ const create = async function (req, res) {
             })
         } else {
 
+            var filePath = "";
+
+            if (req.body.avatar) {
+                const file = Buffer.from(req.body.avatar, 'base64');
+
+                const folderPath = `/upload/class-avatar`
+                filePath = `${folderPath}/${classData.id}.png`
+
+                fs.mkdirSync('public'+folderPath, { recursive: true })
+                fs.writeFileSync('public'+filePath, file,  
+                    function() 
+                    {
+                        console.log('DEBUG - feed:message: Saved to disk image attached by user:', 'public/temporary/file.csv');
+                    },
+                );
+            }
+
             const data = {
                 name: req.body.name,
                 description: req.body.description,
                 user_id: req.user.data.id,
-                avatar: req.body.avatar,
+                avatar: filePath,
             }
 
             const createClass = await MClass.create(data);
