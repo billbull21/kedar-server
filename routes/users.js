@@ -4,10 +4,10 @@ const router = express.Router();
 const authController = require('../controllers/auth/auth_controller');
 const verifyToken = require('../middlewares/verifyToken');
 
-router.get('/:username', verifyToken, authController.fetchUserByUsername);
-router.put('/:username', verifyToken, authController.updateUser);
-router.get('/all', verifyToken, authController.fetchAllUsers);
-router.get('/', verifyToken, authController.fetchUserByToken);
+router.get('/data/:username', verifyToken, authController.fetchUserByUsername);
+router.put('/data/:username', verifyToken, authController.updateUser);
+router.get('/data/all', verifyToken, authController.fetchAllUsers);
+router.get('/data/', verifyToken, authController.fetchUserByToken);
 router.post('/register', authController.register);
 router.post('/login', authController.login);
 router.get('/confirm/:confirmationCode', authController.confirm);

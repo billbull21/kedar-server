@@ -44,7 +44,12 @@ const fetchUserByToken = async function (req, res) {
 
     try {
 
-        const data = req.user.data;
+        const data = await User.findOne({
+            where: {
+                id: req.user.data.id
+            },
+            attributes: {exclude: ['password', 'confirmationCode']},
+        })
 
         if (data.avatar) {
             data.avatar = req.protocol+'://'+`${req.get('host')}`+data.avatar;
