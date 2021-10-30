@@ -9,7 +9,7 @@ const fetchAll = async function (req, res) {
     try {
 
         const data = await sequelize.query(`
-            SELECT tca.*, tcu.class_id, tcu.user_id, mc.name as class_name, mc.avatar as class_avatar, CASE WHEN mc.user_id=${req.user.data.id} THEN true ELSE false END as class_owner, mu.name as user_name 
+            SELECT tca.*, tcu.class_id, tcu.user_id, mc.name as class_name, mc.avatar as class_avatar, CASE WHEN mc.user_id=${req.user.data.id} THEN true ELSE false END as class_owner, CASE WHEN tcu.user_id=${req.user.data.id} THEN true ELSE false END as isSender, mu.name as user_name 
             FROM t_class_activity tca
             INNER JOIN t_class_users tcu ON tcu.id = tca.class_users_id
             INNER JOIN m_class mc ON mc.id = tcu.class_id
