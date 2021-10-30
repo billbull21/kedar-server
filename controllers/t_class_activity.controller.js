@@ -15,6 +15,7 @@ const fetchAll = async function (req, res) {
             INNER JOIN m_class mc ON mc.id = tcu.class_id
             INNER JOIN m_users mu ON mu.id = tcu.user_id
             WHERE tca.class_users_id = '${req.params.id}'
+            ORDER BY tca.created_at DESC
         `, {type: QueryTypes.SELECT});
 
         const result = data.map((x) => {
