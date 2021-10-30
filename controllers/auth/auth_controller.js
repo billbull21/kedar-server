@@ -40,6 +40,29 @@ const fetchAllUsers = async function (req, res) {
     }
 }
 
+const fetchUserByToken = async function (req, res) {
+
+    try {
+
+        const data = req.user.data;
+
+        if (data.avatar) {
+            data.avatar = req.protocol+'://'+`${req.get('host')}`+data.avatar;
+        }
+
+        return res.status(200).json({
+            status: 'success',
+            data: data,
+        })
+    } catch (e) {
+        console.log("ERROR MSG : ", e);
+        return res.status(500).json({
+            status: 'error',
+            message: 'internal server error!',
+        })
+    }
+}
+
 const fetchUserByUsername = async function (req, res) {
 
     try {
@@ -384,6 +407,7 @@ const confirm = async function (req, res) {
 
 module.exports = {
     fetchAllUsers,
+    fetchUserByToken,
     fetchUserByUsername,
     register,
     updateUser,
