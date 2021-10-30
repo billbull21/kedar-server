@@ -17,9 +17,17 @@ const fetchAll = async function (req, res) {
             WHERE tca.class_users_id = '${req.params.id}'
         `, {type: QueryTypes.SELECT});
 
+        const result = data.map((x) => {
+            if (x.attachment)
+                x.attachment = req.protocol+'://'+`${req.get('host')}`+x.attachment
+            if (x.class_avatar)
+                x.class_avatar = req.protocol+'://'+`${req.get('host')}`+x.class_avatar
+            return x
+        });
+
         return res.status(200).json({
             status: 'success',
-            data: data,
+            data: result,
         })
     } catch (e) {
         console.log("ERROR MSG : ", e);
