@@ -10,7 +10,7 @@ const fetchAll = async function (req, res) {
     try {
 
         const data = await sequelize.query(`
-            SELECT tcu.*, mc.name as class_name, mc.avatar as class_avatar, mc.user_id as class_owner, mu.name as class_owner_name FROM t_class_users tcu
+            SELECT tcu.*, mc.name as class_name, mc.description as class_description, mc.avatar as class_avatar, mc.user_id as class_owner, mu.name as class_owner_name, mu.avatar as class_owner_avatar FROM t_class_users tcu
             INNER JOIN m_class mc ON mc.id = tcu.class_id
             INNER JOIN m_users mu ON mu.id = tcu.user_id
             WHERE tcu.user_id = ${req.user.data.id}
